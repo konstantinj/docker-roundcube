@@ -23,10 +23,14 @@ sudo docker run \
   -e MYSQL_USER=roundcube \
   -e MYSQL_PASSWORD=password \
   -e MYSQL_DATABASE=roundcube \
-  -e MAIL_HOST=mail \
-  -e RC_DEFAULT_PORT=143 \ 
+  -e MAIL_HOST=mail.domain.tld \
+  -e RC_DEFAULT_PORT=143 \
+  --link db:db \
+  --link mail:mail.domain.tld \
   konjak/roundcube
 ```
+
+When using tls (which is recommended and preconfigured) you have to link the real mail hostname e.g. mail.domain.tld. Otherwise roundcube will not connect because the used name differs from the one in the certificate. So do NOT use just "mail". For me it was not possible to connect to a hostname bound to the external ip of my server (when running mailserver and roundcube on the same machine).
 
 All provided env vars starting with RC\_ will be converted to config values for roundcube.
 

@@ -2,6 +2,13 @@
 
 cmd_php="php -S 0.0.0.0:80 -c php.ini -t /www"
 
+genpasswd() {
+  export LC_CTYPE=C
+  local l=$1
+  [ "$l" == "" ] && l=16
+  cat /dev/urandom | tr -dc A-Za-z0-9_ | head -c ${l}
+}
+
 wait_for_mysql() {
   until mysql --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_PASSWORD --execute="USE $MYSQL_DATABASE;" &>/dev/null; do
     echo "waiting for mysql to start..."
@@ -17,6 +24,8 @@ wait_for_php() {
 }
 
 init_config() {
+  :>/www/logs/errors
+  export DES_KEY=$(genpasswd 24)
   cat config.php>/www/config/config.inc.php
   echo "<?php">/config/__config.php
   for e in $(env); do
@@ -48,4 +57,5 @@ if [ ! -f .initialized ]; then
   touch .initialized
 fi
 
-$cmd_php
+$cmd_php &
+tail -f /www/logs/errors

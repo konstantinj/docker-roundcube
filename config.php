@@ -15,10 +15,10 @@ $config['managesieve_conn_options'] = [
     'allow_self_signed' => true,
   ],
 ];
+$config['des_key'] = getenv('DES_KEY');
 $config['plugins'] = ['managesieve'];
-$config['des_key'] = 'ROUNDCUBE_RANDOM';
 $config['mime_types'] = '/mime.types';
-$config['product_name'] = '';
+$config['product_name'] = $_SERVER['HTTP_HOST'];
 $config['support_url'] = '';
 foreach (glob('/config/*.php') as $f) {
   require_once $f;
