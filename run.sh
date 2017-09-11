@@ -43,7 +43,7 @@ init_db() {
   wait_for_php
   pid_php=$!
   echo "<?php \$config['enable_installer'] = true;">/config/___setup.php
-  curl --silent --output /dev/null --data "initdb=Initialize+database" http://localhost/installer/index.php?_step=3
+  curl --output /dev/null -X POST --silent --data "initdb=1" http://localhost/installer/index.php?_step=3
   kill $pid_php
   wait $pid_php 2>/dev/null
   rm -rf /www/installer /config/___setup.php
